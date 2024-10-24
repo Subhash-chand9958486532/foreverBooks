@@ -16,7 +16,19 @@ video::-webkit-media-controls-enclosure {
 html {
   scroll-behavior: smooth;
 }
-
+.boPay{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #f5f4f4;
+  padding: 8px 10px;
+  font-weight: bold;
+  color: #002757;
+  cursor: pointer;
+}
+.payImgs_i img{
+  width: 40px !important;
+}
 header {
   width: 100%;
   display: table;

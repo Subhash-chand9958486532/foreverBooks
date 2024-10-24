@@ -345,12 +345,10 @@ export default function Order() {
 							<Offcanvas.Title className='titleText'>Select payment option</Offcanvas.Title>
 						</Offcanvas.Header>
 						<Offcanvas.Body>
-							<div className='payImgs' onClick={ptmFunct}>
-								<img src='/indexImg/ptm.jpg' />
+							<div className="boPay shadow-sm" onClick={ptmFunct}>
+								<div>Pay Through Razorpay </div>
+								<div className='payImgs_i'><img src='/indexImg/payLogo.jpg' /></div>
 							</div>
-							{/* <div className='payImgs'>
-								<img className='deact' src='/indexImg/cc.jpg' />
-							</div> */}
 						</Offcanvas.Body>
 					</Offcanvas>
 					{loader &&
