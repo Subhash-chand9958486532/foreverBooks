@@ -1,0 +1,1493 @@
+--- g2ipmsg-0.9.6+dfsg.orig/g2ipmsg.server
++++ g2ipmsg-0.9.6+dfsg/g2ipmsg.server
+@@ -0,0 +1,32 @@
++<oaf_info>
++<oaf_server iid="OAFIID:G2ipmsgApplet_Factory" type="exe"
++            location="/usr/bin/g2ipmsg_applet">
++
++        <oaf_attribute name="repo_ids" type="stringv">
++                <item value="IDL:Bonobo/GenericFactory:1.0"/>
++                <item value="IDL:Bonobo/Unknown:1.0"/>
++        </oaf_attribute>
++        <oaf_attribute name="name" type="string" value="G2IPMSG Applet Factory"/>
++        <oaf_attribute name="description" type="string" value="G2IPMSG applet factory"/>
++</oaf_server>
++
++<oaf_server iid="OAFIID:G2ipmsgApplet" type="factory"
++            location="OAFIID:G2ipmsgApplet_Factory">
++
++        <oaf_attribute name="repo_ids" type="stringv">
++                <item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
++                <item value="IDL:Bonobo/Control:1.0"/>
++                <item value="IDL:Bonobo/Unknown:1.0"/>
++        </oaf_attribute>
++        <oaf_attribute name="name" type="string" value="G2IPMSG Applet"/>
++        <oaf_attribute name="name-ja" type="string" value="GNOME2版 IPメッセンジャー アプレット"/>
++        <oaf_attribute name="name-zh_CN" type="string" value="飞鸽传书小程序"/>
++        <oaf_attribute name="description" type="string" value="G2IPMSG applet for the GNOME2 panel"/>
++        <oaf_attribute name="description-ja" type="string" value="GNOME2 パネル用 IPメッセンジャー アプレット"/>
++        <oaf_attribute name="description-zh_CN" type="string" value="飞鸽面板"/>
++        <oaf_attribute name="panel:category" type="string" value="Utility"/>
++        <oaf_attribute name="panel:category-ja" type="string" value="ユーティリティ"/>
++        <oaf_attribute name="panel:category-zh_CN" type="string" value="效用"/>
++        <oaf_attribute name="panel:icon" type="string" value="ipmsg.png"/>
++</oaf_server>
++</oaf_info>
+--- g2ipmsg-0.9.6+dfsg.orig/g2ipmsg.schemas
++++ g2ipmsg-0.9.6+dfsg/g2ipmsg.schemas
+@@ -0,0 +1,1106 @@
++<gconfschemafile>
++  <schemalist>
++    <schema>
++      <key>/schemas/apps/g2ipmsg/portno</key>
++      <applyto>/apps/g2ipmsg/portno</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>2425</default>
++      <locale name="C">
++        <short>Port number</short>
++        <long>
++	The port number which g2ipmsg uses.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ポート番号</short>
++        <long>g2ipmsgで使用するポート番号</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>端口号</short>
++        <long>g2ipmsg使用的端口</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/group</key>
++      <applyto>/apps/g2ipmsg/group</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <default>Default Group</default>
++      <locale name="C">
++        <short>Group Name</short>
++        <long>Group name which you belong to. </long>
++      </locale>
++
++      <locale name="ja">
++        <short>グループ名</short>
++        <long>貴方が所属しているグループ</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>组名</short>
++        <long>你所在组名</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/nickname</key>
++      <applyto>/apps/g2ipmsg/nickname</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <default>Default Nick Name</default>
++      <locale name="C">
++        <short>Nick name</short>
++        <long>
++	Nick name which is displayed on ipmsg window.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ニックネーム</short>
++        <long>ウィンドウに表示されるニックネーム</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>昵称</short>
++        <long>昵称</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/secret</key>
++      <applyto>/apps/g2ipmsg/secret</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>true</default>
++      <locale name="C">
++        <short>Secret message</short>
++        <long>Set on this if you want send messages with seal as a default.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>封書</short>
++        <long>封書をデフォルトにする場合はここをセットしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>加密消息</short>
++        <long>设置加密方式发送消息.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/confirm</key>
++      <applyto>/apps/g2ipmsg/confirm</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>true</default>
++      <locale name="C">
++        <short>read message confirmation</short>
++        <long>
++	Check read message confirmation as default.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>開封確認</short>
++        <long>開封確認チェックをデフォルトにする</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>读取消息确定</short>
++        <long>检查默认读取消息的认证</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/broadcasts</key>
++      <applyto>/apps/g2ipmsg/broadcasts</applyto>
++      <owner>g2ipmsg</owner>
++      <type>list</type>
++      <list_type>string</list_type>
++      <default>[255.255.255.255]</default>
++      <locale name="C">
++        <short>Broadcast addresses</short>
++        <long>Set Broadcast addresses.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ブロードキャストアドレス</short>
++        <long>ブロードキャストアドレスを設定</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>广播地址</short>
++        <long>设置广播地址</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/popup</key>
++      <applyto>/apps/g2ipmsg/popup</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>popup messages</short>
++        <long>
++	Popup message windows.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ポップアップ受信</short>
++        <long>受信ウィンドウをポップアップする</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>弹出消息</short>
++        <long>弹出消息</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/sound</key>
++      <applyto>/apps/g2ipmsg/sound</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Sound setting</short>
++        <long>
++	Avoid playing sound on message arrive.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>音声の設定</short>
++        <long>サウンドを鳴らさない</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>设置音效</short>
++        <long>收到消息播放声音</long>
++      </locale>
++    </schema>
++
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/enclose</key>
++      <applyto>/apps/g2ipmsg/enclose</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>true</default>
++      <locale name="C">
++        <short>enclose</short>
++        <long>Enclose messages as default.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>封書</short>
++        <long>封書をデフォルトにする</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>加密</short>
++        <long>封锁消息</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/cite</key>
++      <applyto>/apps/g2ipmsg/cite</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Citation Control</short>
++        <long>Check citation as default.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>引用制御</short>
++        <long>引用チェックをデフォルトにする</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>引用控制</short>
++        <long>检查默认引用</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/ipv6</key>
++      <applyto>/apps/g2ipmsg/ipv6</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Enable IP V6 mode</short>
++        <long>Set this option if use g2ipmsg on IP V6 network
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>IP V6モードの有効化</short>
++        <long>g2ipmsgをIP V6 ネットワーク上で使用する場合はここを有効にしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>IP V6有効</short>
++        <long>设置IP V6网络选项.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/logfilepath</key>
++      <applyto>/apps/g2ipmsg/logfilepath</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <default>ipmsg.log</default>
++      <locale name="C">
++        <short>log file</short>
++        <long>Set log file name.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ログファイル</short>
++        <long>ログを記録するファイル名</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>记录文件</short>
++        <long>设置记录文件名</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/enablelog</key>
++      <applyto>/apps/g2ipmsg/enablelog</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Enable logging</short>
++        <long>Enable logging on log-file.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ログを記録する</short>
++        <long>ログファイルにログを記録する</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>使用记录</short>
++        <long>记录到文件使能</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/enablelogname</key>
++      <applyto>/apps/g2ipmsg/enablelogname</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>logon-name logging</short>
++        <long>Logging user's logon name.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ログオン名の記録</short>
++        <long>ログオン名をログに記録する</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>登录名记录中</short>
++        <long>记录登录名</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/enablelogaddr</key>
++      <applyto>/apps/g2ipmsg/enablelogaddr</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>IP address logging</short>
++        <long>Enable IP address logging.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>IPアドレスをログに記録する</short>
++        <long>IPアドレスをログに記録する</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>记录IP地址</short>
++        <long>记录IP地址</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/loglockedmessage</key>
++      <applyto>/apps/g2ipmsg/loglockedmessage</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>logging locked message after openning it</short>
++        <long>Please check here if you want to log the content of the message 
++	after the message is opened when the message is locked.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>錠付きのメッセージ</short>
++        <long>施錠されたメッセージをログに記録するときは, 開封後に記録するようにしたい場合は, ここをチェックしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>将打开的上锁消息加到日志文件中</short>
++        <long>如果你想保存你收到并打开的带锁的消息，请选择这里</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/citestring</key>
++      <applyto>/apps/g2ipmsg/citestring</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <default>&gt;</default>
++      <locale name="C">
++        <short>Citation prefix</short>
++        <long>String which indicate citation.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>引用文字列</short>
++        <long>引用を示す文字列</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>引用文字列</short>
++        <long>引用</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/absence_titles</key>
++      <applyto>/apps/g2ipmsg/absence_titles</applyto>
++      <owner>g2ipmsg</owner>
++      <type>list</type>
++      <list_type>string</list_type>
++      <locale name="C">
++        <default>[ABSENT,EATING,OUT,MEETING,VISITOR,HOME,EDO,SHUKKE]</default>
++        <short>Absence titile</short>
++        <long>set Absense titles
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <default>[不在,食事中,外出中,会議中,来客中,帰宅,江戸,出家]</default>
++        <short>不在メッセージ表題</short>
++        <long>不在文を設定してください</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <default>[离开,进食,外出,开会,会客,回家,干大事去了,出家]</default>
++        <short>离开时的标题</short>
++        <long>设置不在时的标题</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/absence_messages</key>
++      <applyto>/apps/g2ipmsg/absence_messages</applyto>
++      <owner>g2ipmsg</owner>
++      <type>list</type>
++      <list_type>string</list_type>
++      <locale name="C">
++      <default>[I am absent now.,I have been gone somewhere to eat.,I am out now.,I attend meeting now.,A visitor comes here.,I have come home.,Edo,Shukke.]</default>
++        <short>Absence messages</short>
++        <long>Absence messages
++        </long>
++      </locale>
++
++      <locale name="ja">
++      <default>[不在中です.,食事中です.,外出中です.,会議中です. ,接客中です.,帰宅しました.,江戸所払いを申しつける,人生に疲れました.探さないでください]</default>
++        <short>不在文</short>
++        <long>不在文</long>
++      </locale>
++
++      <locale name="zh_CN">
++      <default>[离开,进食,外出,开会,会客,回家,干大事去了,出家]</default>
++        <short>离开时的消息</short>
++        <long>离开时的消息</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/enable_debug</key>
++      <applyto>/apps/g2ipmsg/enable_debug</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>enable debug output</short>
++        <long>enable debug output
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>デバッグ出力を有効にする</short>
++        <long>デバッグ出力を有効にする</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>开启调错</short>
++        <long>开启调错</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/msg_win_width</key>
++      <applyto>/apps/g2ipmsg/msg_win_width</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>325</default>
++      <locale name="C">
++        <short>message window width</short>
++        <long>Change default message window width
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>メッセージウィンドウ幅</short>
++        <long>メッセージウィンドウ幅の既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>消息窗口宽</short>
++        <long>改变默认宽</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/msg_win_height</key>
++      <applyto>/apps/g2ipmsg/msg_win_height</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>370</default>
++      <locale name="C">
++        <short>message window height</short>
++        <long>Change default message window height
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>メッセージウィンドウ高</short>
++        <long>メッセージウィンドウの高さの既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>消息窗口高</short>
++        <long>改变默认高</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/recv_win_width</key>
++      <applyto>/apps/g2ipmsg/recv_win_width</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>340</default>
++      <locale name="C">
++        <short>receive window width</short>
++        <long>Change default receive window width
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>受信ウィンドウ幅</short>
++        <long>受信ウィンドウ幅の既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>接收消息宽</short>
++        <long>改变默认接收框宽</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/recv_win_height</key>
++      <applyto>/apps/g2ipmsg/recv_win_height</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>333</default>
++      <locale name="C">
++        <short>receive window height</short>
++        <long>Change default receive window height
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>受信ウィンドウ高</short>
++        <long>受信ウィンドウの高さの既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>接收窗口高</short>
++        <long>改变默认接收框高</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/attach_win_width</key>
++      <applyto>/apps/g2ipmsg/attach_win_width</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>600</default>
++      <locale name="C">
++        <short>Attachment editor width</short>
++        <long>Change default attachment editor width
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>添付ファイルエディタの幅</short>
++        <long>添付ファイルエディタの幅の既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>附件框宽</short>
++        <long>改变附件框宽</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/attach_win_height</key>
++      <applyto>/apps/g2ipmsg/attach_win_height</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>170</default>
++      <locale name="C">
++        <short>Attachment editor height</short>
++        <long>Change default attachment editor height
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>添付ファイルエディタの高さ</short>
++        <long>添付ファイルエディタの高さの既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>附件框高</short>
++        <long>改变附件框高</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/absence_win_width</key>
++      <applyto>/apps/g2ipmsg/absence_win_width</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>600</default>
++      <locale name="C">
++        <short>Absence message editor width</short>
++        <long>Change default absence message editor width
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>不在通知文エディタの幅</short>
++        <long>不在通知文エディタの幅の既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>离开时框宽</short>
++        <long>改变离开时的框宽</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/absence_win_height</key>
++      <applyto>/apps/g2ipmsg/absence_win_height</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>290</default>
++      <locale name="C">
++        <short>Absence message editor height</short>
++        <long>Change default absence message editor height
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>不在通知文エディタの高さ</short>
++        <long>不在通知文エディタの高さの既定値の変更</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>离开时框高</short>
++        <long>改变离开时的框高</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/dialup</key>
++      <applyto>/apps/g2ipmsg/dialup</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Enable dialup mode</short>
++        <long>Set this option to enable dialup mode.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ダイアルアップモードの有効化</short>
++        <long>ダイアルアップ環境で使用する場合は, このオプションを有効にしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>拔号使能</short>
++        <long>允许拔号模式.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/get_host_list</key>
++      <applyto>/apps/g2ipmsg/get_host_list</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Enable getting host list facility</short>
++        <long>Set this option to enable getting host list facility
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>更新時にホストリストを取得する</short>
++        <long>ホストリスト取得処理を有効にする場合はここを有効にしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>快速取主机列表使能</short>
++        <long>允许快速主机列表搜索.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/allow_host_list</key>
++      <applyto>/apps/g2ipmsg/allow_host_list</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Allow host list sending</short>
++        <long>Set this option to allow host list sending
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ホストリスト送信を許可</short>
++        <long>ホストリスト送信処理を有効にする場合はここを有効にしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>允许主机列出正在发送</short>
++        <long>允许主机列表发送选项.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/default_prio</key>
++      <applyto>/apps/g2ipmsg/default_prio</applyto>
++      <owner>g2ipmsg</owner>
++      <type>list</type>
++      <list_type>string</list_type>
++      <locale name="C">
++        <short>Default priority</short>
++        <long>Default priority(Separated by '@')
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>デフォルトの優先度</short>
++        <long>デフォルトの優先度(&apos;@&apos;で区切って指定)</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>默认优先级</short>
++        <long>默认优先级（以字符&apos;@&apos;分割）</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/use_systray</key>
++      <applyto>/apps/g2ipmsg/use_systray</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>true</default>
++      <locale name="C">
++        <short>Use SysTray</short>
++        <long>Please set here if you want to use g2ipmsg in the System Tray,
++	This need the system tray which perform with freedesktop.org compliant System Tray Protocol(see:http://www.freedesktop.org/wiki/Standards/systemtray-spec. This require gtk-2.10 or later).
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>システムトレイに常駐する</short>
++        <long>g2ipmsgをシステムトレイに常駐させる場合は, ここをセットしてください. これには, freedesktop.orgのシステムトレイプロトコルに準拠したシステムトレイが必要です(http://www.freedesktop.org/wiki/Standards/systemtray-spec.参照.これには, gtk-2.10以上が必要です.).</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>使用任务栏图标</short>
++        <long>如果你想把它放入任务栏中，需要freedesktop.org系统任务栏条约，请参考http://www.freedesktop.org/wiki/Standards/systemtray-spec</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/header_visible</key>
++      <applyto>/apps/g2ipmsg/header_visible</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>5</default>
++      <locale name="C">
++        <short>Header visual</short>
++        <long>Header visual state
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ヘッダ表示</short>
++        <long>ヘッダ表示の状態</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>标题视觉</short>
++        <long>标题视觉状态</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/header_order</key>
++      <applyto>/apps/g2ipmsg/header_order</applyto>
++      <owner>g2ipmsg</owner>
++      <type>list</type>
++      <list_type>int</list_type>
++      <default>[0,1,2,3,4,5]</default>
++      <locale name="C">
++        <short>Header order</short>
++        <long>Internal header order representation.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>ヘッダ順序</short>
++        <long>ヘッダ表示順序の内部表現.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>标题顺序</short>
++        <long>内部标题顺序.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/sort_with_group</key>
++      <applyto>/apps/g2ipmsg/sort_with_group</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Sort user list with group</short>
++        <long>Set here if you want to sort user list with group.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>グループ名でソート</short>
++        <long>グループ名によるソートを行う場合はここをセットしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>按组排序</short>
++        <long>设置按组排序.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/sub_sort_id</key>
++      <applyto>/apps/g2ipmsg/sub_sort_id</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>0</default>
++      <locale name="C">
++        <short>Sub sorting id</short>
++        <long>Internal representation of sub sorting id.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>サブソートキー</short>
++        <long>サブソートIDの内部表現</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>子排序ID</short>
++        <long>补充ID排序的内部显示</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/group_sort_descending</key>
++      <applyto>/apps/g2ipmsg/group_sort_descending</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Group sort with descending order.</short>
++        <long>Set here to sort user list with descending ordered group name.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>グループによる逆順ソート</short>
++        <long>グループ名によるソートを逆順で行う場合はここをセットしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>按组反序排列</short>
++        <long>设置按组名逆排序.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/sub_sort_descending</key>
++      <applyto>/apps/g2ipmsg/sub_sort_descending</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Sub sort with descending order</short>
++        <long>Set here to sort user list with descending ordered sub sort key.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>サブソートキーによるソートを逆順で行う</short>
++        <long>サブソートキーによるソートを逆順で行う場合はここをセットしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>按组反序排列</short>
++        <long>设置二级排序方案.</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/crypt_policy_speed</key>
++      <applyto>/apps/g2ipmsg/crypt_policy_speed</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Select cipher according to speed.</short>
++        <long>Set this option to select ciphers according to encoding/decoding speed.
++	      If you use low speed machine, please set this option.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>速度優先で暗号化アルゴリズムを選択する.</short>
++        <long>暗号化アルゴリズムを暗号化/復号化の速度に基づいて選択する場合は, このオプションを有効にします. 遅いマシンを使用している場合は, このオプションをセットしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>根据机器速度选择加密算法</short>
++        <long>选择此项，如果你需要根据机器速度选择加密算法。如果你使用的是低速机器，请选择此项。</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/ciphers</key>
++      <applyto>/apps/g2ipmsg/ciphers</applyto>
++      <owner>g2ipmsg</owner>
++      <type>int</type>
++      <default>268881927</default>
++      <locale name="C">
++        <short>Select ciphers.</short>
++        <long>Select ciphers to encrypt messages.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>暗号化に使用する暗号方式を選択してください.</short>
++        <long>暗号化に使用する暗号方式を選択してください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>选择加密算法</short>
++        <long>选择用于加密消息的加密算法</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/encrypt_publickey</key>
++      <applyto>/apps/g2ipmsg/encrypt_publickey</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>FALSE</default>
++      <locale name="C">
++        <short>Store encrypted public/private key pairs</short>
++        <long>Please check here if you want to store public/private keys with encryption .
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>公開鍵/秘密鍵を暗号化して保存する.</short>
++        <long>公開鍵と秘密鍵を暗号化して保存する場合はここをチェックしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>存储公钥密钥</short>
++        <long>如果你想存储用于加密的公钥密钥，请选择这里</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/lock</key>
++      <applyto>/apps/g2ipmsg/lock</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>FALSE</default>
++      <locale name="C">
++        <short>Enable lock for enclosed messages</short>
++        <long>Please check here if you want to use the lock feature(Sent messages can be opened by receiver's password.)
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>封書に錠を設定する.</short>
++        <long>封書に錠を設定する(受信メッセージの開封時に受信者が設定したパスワードを問い合わせる)場合は, ここをチェックしてください.</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>允许为信息加密</short>
++        <long>如果你想使用锁功能（收信人必须输入密码打开消息），请选择这里</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/enc_pass</key>
++      <applyto>/apps/g2ipmsg/enc_pass</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <locale name="C">
++      <default></default>
++        <short>encryption password for public/private key storage</short>
++        <long>Encryption password for public/private key storage. This is encoded with pbkdf2.
++        </long>
++      </locale>
++
++      <locale name="ja">
++      
++        <short>公開鍵/秘密鍵を暗号化して保存するために使用するパスワード</short>
++        <long>公開鍵/秘密鍵を暗号化するパスワード.これは, pbkdf2でエンコードされています.</long>
++      </locale>
++
++      <locale name="zh_CN">
++      
++        <short>访问公钥密钥的密码</short>
++        <long>用pbkdf2算法加密的公钥密钥</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/lock_pass</key>
++      <applyto>/apps/g2ipmsg/lock_pass</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <locale name="C">
++      <default></default>
++        <short>encryption password for lock</short>
++        <long>Encryption password for lock. This is encoded with pbkdf2.
++        </long>
++      </locale>
++
++      <locale name="ja">
++      
++        <short>施錠に使用するパスワード</short>
++        <long>錠付き封書を開封するパスワード.これは, pbkdf2でエンコードされています.</long>
++      </locale>
++
++      <locale name="zh_CN">
++      
++        <short>解密密码</short>
++        <long>用pbkdf2算法加密锁密码</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/iconify_dialogs</key>
++      <applyto>/apps/g2ipmsg/iconify_dialogs</applyto>
++      <owner>g2ipmsg</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Inconify dialogs</short>
++        <long>Iconify normal dialogs when they are shown at first time.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>送信/開封確認をアイコン表示</short>
++        <long>送信/開封確認をアイコン表示</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>图标化对话框</short>
++        <long>将需要显示的对话框首先显示为图标</long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/apps/g2ipmsg/external_encoding</key>
++      <applyto>/apps/g2ipmsg/external_encoding</applyto>
++      <owner>g2ipmsg</owner>
++      <type>string</type>
++      <default>CP932</default>
++      <locale name="C">
++        <short>External encoding for message</short>
++        <long>External message encoding to exchange messages via the network.
++        </long>
++      </locale>
++
++      <locale name="ja">
++        <short>メッセージのデフォルトエンコーディング</short>
++        <long>ネットワーク上でメッセージを交換する際のデフォルトメッセージエンコーディング</long>
++      </locale>
++
++      <locale name="zh_CN">
++        <short>消息外部编码</short>
++        <long>用于在网络上交换消息的外部编码</long>
++      </locale>
++    </schema>
++
++  </schemalist>
++
++</gconfschemafile>
+--- g2ipmsg-0.9.6+dfsg.orig/g2ipmsg.desktop
++++ g2ipmsg-0.9.6+dfsg/g2ipmsg.desktop
+@@ -0,0 +1,14 @@
++[Desktop Entry]
++Encoding=UTF-8
++Terminal=false
++Name=GNOME2 IP Messenger
++Name[ja]=GNOME2 IPメッセンジャー
++Name[zh_CN]=GNOME2飞鸽
++Comment=IP Messenger for the GNOME2
++Comment[ja]=GNOME2 版 IPメッセンジャー
++Comment[zh_CN]=GNOME2 版 飞鸽
++Exec=g2ipmsg
++TryExec=g2ipmsg
++Icon=ipmsg.png
++Type=Application
++Categories=GTK;Application;Utility;
+--- g2ipmsg-0.9.6+dfsg.orig/g2ipmsg.server.in
++++ g2ipmsg-0.9.6+dfsg/g2ipmsg.server.in
+@@ -0,0 +1,26 @@
++<oaf_info>
++<oaf_server iid="OAFIID:G2ipmsgApplet_Factory" type="exe"
++            location="/usr/bin/g2ipmsg_applet">
++
++        <oaf_attribute name="repo_ids" type="stringv">
++                <item value="IDL:Bonobo/GenericFactory:1.0"/>
++                <item value="IDL:Bonobo/Unknown:1.0"/>
++        </oaf_attribute>
++        <oaf_attribute name="name" type="string" value="G2IPMSG Applet Factory"/>
++        <oaf_attribute name="description" type="string" value="G2IPMSG applet factory"/>
++</oaf_server>
++
++<oaf_server iid="OAFIID:G2ipmsgApplet" type="factory"
++            location="OAFIID:G2ipmsgApplet_Factory">
++
++        <oaf_attribute name="repo_ids" type="stringv">
++                <item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
++                <item value="IDL:Bonobo/Control:1.0"/>
++                <item value="IDL:Bonobo/Unknown:1.0"/>
++        </oaf_attribute>
++        <oaf_attribute name="name" type="string" _value="G2IPMSG Applet"/>
++        <oaf_attribute name="description" type="string" _value="G2IPMSG applet for the GNOME2 panel"/>
++        <oaf_attribute name="panel:category" type="string" _value="Utility"/>
++        <oaf_attribute name="panel:icon" type="string" value="ipmsg.png"/>
++</oaf_server>
++</oaf_info>
+--- g2ipmsg-0.9.6+dfsg.orig/debian/menu
++++ g2ipmsg-0.9.6+dfsg/debian/menu
+@@ -0,0 +1,2 @@
++?package(g2ipmsg):needs="X11" section="Applications/Network/Communication"\
++  title="g2ipmsg" command="/usr/bin/g2ipmsg"
+--- g2ipmsg-0.9.6+dfsg.orig/debian/compat
++++ g2ipmsg-0.9.6+dfsg/debian/compat
+@@ -0,0 +1 @@
++7
+--- g2ipmsg-0.9.6+dfsg.orig/debian/g2ipmsg.1
++++ g2ipmsg-0.9.6+dfsg/debian/g2ipmsg.1
+@@ -0,0 +1,43 @@
++.\"                                      Hey, EMACS: -*- nroff -*-
++.\" First parameter, NAME, should be all caps
++.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
++.\" other parameters are allowed: see man(7), man(1)
++.TH G2IPMSG 1 "October 19, 2009"
++.\" Please adjust this date whenever revising the manpage.
++.\"
++.\" Some roff macros, for reference:
++.\" .nh        disable hyphenation
++.\" .hy        enable hyphenation
++.\" .ad l      left justify
++.\" .ad b      justify to both left and right margins
++.\" .nf        disable filling
++.\" .fi        enable filling
++.\" .br        insert line break
++.\" .sp <n>    insert n+1 empty lines
++.\" for manpage-specific macros, see man(7)
++.SH NAME
++g2ipmsg \- IP messenger clone for GNOME2 environments.
++.SH SYNOPSIS
++.B g2ipmsg
++.RI [ options ] 
++.br
++.SH DESCRIPTION
++This manual page documents briefly the
++.B g2ipmsg
++commands.
++.PP
++.\" TeX users may be more comfortable with the \fB<whatever>\fP and
++.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
++.\" respectively.
++IP messsenger is one of popular win-popup style message exchanger in Japan.
++\fBg2ipmsg\fP is a kind of IP messenger clone for GNOME2 environments.
++
++.SH SEE ALSO
++.BR g2ipmsg_applet (1)
++.
++.SH AUTHOR
++g2ipmsg was written by Takeharu KATO <takeharu1219@ybb.ne.jp>.
++
++.PP
++This manual page was written by TANIGUCHI Takaki <takaki@debian.org>,
++for the Debian project (and may be used by others).
+--- g2ipmsg-0.9.6+dfsg.orig/debian/docs
++++ g2ipmsg-0.9.6+dfsg/debian/docs
+@@ -0,0 +1,3 @@
++NEWS
++README
++README.jp
+--- g2ipmsg-0.9.6+dfsg.orig/debian/g2ipmsg_applet.1
++++ g2ipmsg-0.9.6+dfsg/debian/g2ipmsg_applet.1
+@@ -0,0 +1,43 @@
++.\"                                      Hey, EMACS: -*- nroff -*-
++.\" First parameter, NAME, should be all caps
++.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
++.\" other parameters are allowed: see man(7), man(1)
++.TH G2IPMSG_APPLET 1 "October 19, 2009"
++.\" Please adjust this date whenever revising the manpage.
++.\"
++.\" Some roff macros, for reference:
++.\" .nh        disable hyphenation
++.\" .hy        enable hyphenation
++.\" .ad l      left justify
++.\" .ad b      justify to both left and right margins
++.\" .nf        disable filling
++.\" .fi        enable filling
++.\" .br        insert line break
++.\" .sp <n>    insert n+1 empty lines
++.\" for manpage-specific macros, see man(7)
++.SH NAME
++g2ipmsg_applet \- IP messenger clone for GNOME2 panel applet
++.SH SYNOPSIS
++.B g2ipmsg_applet
++.RI [ options ] 
++.br
++.SH DESCRIPTION
++This manual page documents briefly the
++.B g2ipmsg_applet
++commands.
++.PP
++.\" TeX users may be more comfortable with the \fB<whatever>\fP and
++.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
++.\" respectively.
++IP messsenger is one of popular win-popup style message exchanger in Japan.
++\fBg2ipmsg\fP is a kind of IP messenger clone for GNOME2 environments.
++
++.SH SEE ALSO
++.BR g2ipmsg (1)
++.
++.SH AUTHOR
++g2ipmsg_applet was written by Takeharu KATO <takeharu1219@ybb.ne.jp>.
++
++.PP
++This manual page was written by TANIGUCHI Takaki <takaki@debian.org>,
++for the Debian project (and may be used by others).
+--- g2ipmsg-0.9.6+dfsg.orig/debian/manpages
++++ g2ipmsg-0.9.6+dfsg/debian/manpages
+@@ -0,0 +1,2 @@
++debian/g2ipmsg.1
++debian/g2ipmsg_applet.1
+--- g2ipmsg-0.9.6+dfsg.orig/debian/watch
++++ g2ipmsg-0.9.6+dfsg/debian/watch
+@@ -0,0 +1,24 @@
++# Example watch control file for uscan
++# Rename this file to "watch" and then you can run the "uscan" command
++# to check for upstream updates and more.
++# See uscan(1) for format
++
++# Compulsory line, this is a version 3 file
++version=3
++
++# Uncomment to examine a Webpage
++# <Webpage URL> <string match>
++opts=dversionmangle=s/\+dfsg$// \
++ http://www.ipmsg.org/ /archive/g2ipmsg-(.*)\.tar\.gz
++
++# Uncomment to examine a Webserver directory
++#http://www.example.com/pub/g2ipmsg-(.*)\.tar\.gz
++
++# Uncommment to examine a FTP server
++#ftp://ftp.example.com/pub/g2ipmsg-(.*)\.tar\.gz debian uupdate
++
++# Uncomment to find new files on sourceforge, for devscripts >= 2.9
++# http://sf.net/g2ipmsg/g2ipmsg-(.*)\.tar\.gz
++
++# Uncomment to find new files on GooglePages
++# http://example.googlepages.com/foo.html g2ipmsg-(.*)\.tar\.gz
+--- g2ipmsg-0.9.6+dfsg.orig/debian/copyright
++++ g2ipmsg-0.9.6+dfsg/debian/copyright
+@@ -0,0 +1,99 @@
++This work was packaged for Debian by:
++
++    TANIGUCHI Takaki <takaki@debian.org> on Mon, 19 Oct 2009 14:20:31 +0900
++
++It was downloaded from http://www.ipmsg.org/ .
++
++Upstream Author:
++
++   Takeharu KATO <takeharu1219@ybb.ne.jp>
++
++Copyright:
++
++    Copyright (C) 2006 Takeharu KATO
++
++License:
++/*
++ *  Copyright (C) 2006 Takeharu KATO
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ */
++
++sound/g2ipmsg.ogg:
++  
++  Author: Mike Koenig
++  Download: http://soundbible.com/474-Magic-Wand-Noise.html
++  License: Creative Commons Attribution 3.0
++
++src/symcrypt.c src/pubcrypt.c:
++
++/*
++ * Following codes(particularly check_secure_directory function) 
++ * are derived from 
++ * ``Secure Programming Cookbook for C and C++''.
++ * URL:http://www.oreilly.com/catalog/secureprgckbk/ 
++ *     http://www.secureprogramming.com/
++ * 
++ * Licensing Information can be obtain from following URL:
++ *
++ *  http://www.secureprogramming.com/?action=license
++ *
++ * Copyright  2003 by John Viega and Matt Messier.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are
++ * met: 
++
++ * 1. Redistributions of source code must retain the above copyright
++ * notice, this list of conditions and the following disclaimer.
++ *
++ * 2. Redistributions in binary form must reproduce the above copyright
++ * notice, this list of conditions and the following disclaimer in the
++ *  documentation and/or other materials provided with the distribution.
++ *
++ * 3. Neither the name of the developer of this software nor the names of its
++ * contributors may be used to endorse or promote products derived from
++ * this software without specific prior written permission.
++ * 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ *
++ */
++
++On Debian systems, the complete text of the BSD License can be
++found in `/usr/share/common-licenses/BSD'.
++
++The Debian packaging is:
++
++    Copyright (C) 2009 TANIGUCHI Takaki <takaki@debian.org>
++
++and is licensed under the BSD,
++see `/usr/share/common-licenses/BSD.
+--- g2ipmsg-0.9.6+dfsg.orig/debian/control
++++ g2ipmsg-0.9.6+dfsg/debian/control
+@@ -0,0 +1,16 @@
++Source: g2ipmsg
++Section: gnome
++Priority: optional
++Maintainer: TANIGUCHI Takaki <takaki@debian.org>
++Build-Depends: cdbs, debhelper (>= 7), autotools-dev,
++	libgnomeui-dev, libgstreamer0.10-dev,
++	libxml-parser-perl,libssl-dev
++Standards-Version: 3.8.3
++Homepage: http://www.ipmsg.org/
++
++Package: g2ipmsg
++Architecture: any
++Depends: ${shlibs:Depends}, ${misc:Depends}
++Description: IP messenger clone for GNOME2 environments
++ IP messsenger is one of popular win-popup style message exchanger in Japan.
++ G2ipmsg is a kind of IP messenger clone for GNOME2 environments.
+--- g2ipmsg-0.9.6+dfsg.orig/debian/README.Debian
++++ g2ipmsg-0.9.6+dfsg/debian/README.Debian
+@@ -0,0 +1,8 @@
++g2ipmsg for Debian
++------------------
++
++Original source's 'sounds/g2ipmsg.ogg' is under non-free license.
++I replace it by free (see copying) one. 
++f you know better sound effect, please teach me.
++
++ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 19 Oct 2009 14:20:31 +0900
+--- g2ipmsg-0.9.6+dfsg.orig/debian/changelog
++++ g2ipmsg-0.9.6+dfsg/debian/changelog
+@@ -0,0 +1,13 @@
++g2ipmsg (0.9.6+dfsg-1.1) unstable; urgency=low
++
++  * Non-maintainer upload, for the GNOME 3 transition.
++  * Disable GNOME panel applet and drop the build dependency on
++    libpanel-applet2-dev. (Closes: #638106)
++
++ -- Michael Biebl <biebl@debian.org>  Thu, 20 Oct 2011 12:56:26 +0200
++
++g2ipmsg (0.9.6+dfsg-1) unstable; urgency=low
++
++  * Initial release (Closes: #551615)
++
++ -- TANIGUCHI Takaki <takaki@debian.org>  Tue, 20 Oct 2009 13:26:50 +0900
+--- g2ipmsg-0.9.6+dfsg.orig/debian/rules
++++ g2ipmsg-0.9.6+dfsg/debian/rules
+@@ -0,0 +1,13 @@
++#!/usr/bin/make -f
++
++include /usr/share/cdbs/1/rules/debhelper.mk
++include /usr/share/cdbs/1/class/autotools.mk
++include /usr/share/cdbs/1/class/gnome.mk
++
++
++# Add here any variable or target overrides you need.
++DEB_CONFIGURE_EXTRA_FLAGS := --disable-applet
++
++# Remove stray bonobo server file
++binary-install/g2ipmsg::
++	rm -rf debian/g2ipmsg/usr/lib/

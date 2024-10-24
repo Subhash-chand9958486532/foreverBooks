@@ -1,0 +1,36 @@
+# Dependency directories
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Miscellaneous
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.log
+
+# Typescript cache (if using TypeScript)
+*.tsbuildinfo
+
+# Next.js static export folder (optional, only if you run `next export`)
+out/
