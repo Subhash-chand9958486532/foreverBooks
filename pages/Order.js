@@ -21,6 +21,8 @@ import Router from 'next/router'
 import { useRouter } from 'next/router'
 import { usePathname } from 'next/navigation'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import Swal from 'sweetalert2';
+
 export default function Order() {
 	const {
 		apiBase,
@@ -161,6 +163,138 @@ export default function Order() {
 	let amtLast = parseFloat(totalAmount).toFixed(2);
 
 	let payAmt =parseFloat(amtLast+gettShip).toFixed(2);  
+
+
+	
+	const loadRazorpayScript = () => {
+		return new Promise((resolve) => {
+			const script = document.createElement('script');
+			script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+			script.onload = () => resolve(true);
+			script.onerror = () => resolve(false);
+			document.body.appendChild(script);
+		});
+	};
+	
+	const handlePayment = async () => {
+		setLoader(true);
+		try {
+			const res = await loadRazorpayScript();
+			if (!res) {
+				Swal.fire('Error', 'Razorpay SDK failed to load. Are you online?', 'error');
+				setLoader(false);
+				return;
+			}
+	
+			const postData = {
+				customer_id: userData.customer_id,
+				address_id: addressIDS,
+				cart_id: cartIds,
+				token: token,
+				isWeb: 1
+			};
+	
+			const result = await fetch(apiBase + 'books/buy', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'api_token': token,
+				},
+				body: JSON.stringify(postData),
+			});
+	
+			if (!result.ok) {
+				console.error('Error:', result.status, result.statusText);
+				Swal.fire('Error', `API request failed: ${result.status} - ${result.statusText}`, 'error');
+				setLoader(false);
+				return;
+			}
+	
+			const data = await result.json();
+			console.log('API Response:', data);  // Log response data for debugging
+	
+			if (data.status === "success" && data.orderID) {
+				const options = {
+					key: 'rzp_live_ESHYjQ2LWl9DNS',
+					amount: data.amount_paise,
+					currency: data.currency,
+					name: 'FOREVER BOOKS PRIVATE LIMITED',
+					description: 'Test Transaction',
+					order_id: data.orderID,
+					handler: function (response) {
+						// if (response.razorpay_payment_id && response.razorpay_order_id && response.razorpay_signature) {
+						// 	router.push('/Your-order');
+						// } else {
+						// 	console.error('Missing necessary response fields:', response);
+						// }
+
+						if (response.razorpay_payment_id) {
+							const xData = {
+								"customer_id": userData.customer_id,
+								"address_id": addressIDS,
+								"token": token,
+								"shippingCharge":data.shippingCharge,
+								"razorpay_order_id": response.razorpay_order_id,
+								"razorpay_payment_id": response.razorpay_payment_id,
+								"razorpay_signature": response.razorpay_signature
+							};
+
+							// Verify payment details
+							fetch(apiBase + 'payment/verify', {
+								method: 'POST',
+								body: JSON.stringify(xData),
+								headers: {
+									'Accept': 'application/json',
+									'Content-Type': 'application/json',
+									'api_token': token,
+								},
+							})
+								.then(response => response.json())
+								.then((result) => {
+									if (result.status === "success") {
+										router.push('/Your-order');
+										console.log(result, "After payment success.....")
+									} else {
+										Swal.fire({
+											title: 'Warning!',
+											text: result.message,
+											icon: 'warning',
+											confirmButtonText: 'OK'
+										});
+									}
+								})
+								.catch((err) => alert(err))
+								.finally(() => setLoader(false));
+						} else {
+							console.error('Missing razorpay_payment_id in response');
+						}
+					},
+					prefill: {
+						name: 'YEF',
+						email: 'foreverbook4583@gmail.com',
+						contact: '91 9717 998857',
+					},
+					theme: {
+						color: '#3399cc',
+					},
+				};
+	
+				const paymentObject = new window.Razorpay(options);
+				paymentObject.open();
+			} else {
+				Swal.fire('Warning', data.message ?? 'Failed to initiate payment. Please try again later.', 'warning');
+			}
+		} catch (error) {
+			console.error('Error during payment process:', error);
+			Swal.fire('Error', 'An error occurred during the payment process. Please try again.', 'error');
+		} finally {
+			setLoader(false);
+		}
+	};
+	
+	
+
+
 
 	return (
 		<>
@@ -345,7 +479,7 @@ export default function Order() {
 							<Offcanvas.Title className='titleText'>Select payment option</Offcanvas.Title>
 						</Offcanvas.Header>
 						<Offcanvas.Body>
-							<div className="boPay shadow-sm" onClick={ptmFunct}>
+							<div className="boPay shadow-sm" onClick={handlePayment}>
 								<div>Pay Through Razorpay </div>
 								<div className='payImgs_i'><img src='/indexImg/payLogo.jpg' /></div>
 							</div>

@@ -16,7 +16,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
-
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 export default function CartListData() {
 	const {
 		apiBase,
@@ -35,8 +36,9 @@ export default function CartListData() {
 		productPath,
 		gettShip,
 		getShipingCharge
-		
+
 	} = useContext(Context);
+	const router = useRouter();
 	useEffect(() => {
 		if (addressIDS !== "") {
 			getShipingCharge();
@@ -62,11 +64,11 @@ export default function CartListData() {
 			setgetBuyIds(getBuyIds);
 		}
 	}, []);
-	
+
 	const [getBuyIds, setgetBuyIds] = useState([]);
 	let BuycartIds = [getBuyIds]
 
-    console.log(BuycartIds, "00000")
+	console.log(BuycartIds, "00000")
 
 	const [items, setItems] = useState({});
 	const [singlPro, setSinglPro] = useState({});
@@ -85,80 +87,209 @@ export default function CartListData() {
 		setModl(true)
 	}
 
-	function ptmFunct() {
-		setLoader(true)
-		const postData = {
-			"customer_id": userData.customer_id,
-			"address_id": addressIDS,
-			"cart_id": BuycartIds,
-			"token": token,
-			"buy_now": 1,
-			"quantity": 1,
-			"isWeb": 1
+	// function ptmFunct() {
+	// 	setLoader(true)
+	// 	const postData = {
+	// 		"customer_id": userData.customer_id,
+	// 		"address_id": addressIDS,
+	// 		"cart_id": BuycartIds,
+	// 		"token": token,
+	// 		"buy_now": 1,
+	// 		"quantity": 1,
+	// 		"isWeb": 1
 
-		}
-		fetch(apiBase + 'orderGenerate', {
-			method: "POST",
-			body: JSON.stringify(postData),
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
+	// 	}
+	// 	fetch(apiBase + 'orderGenerate', {
+	// 		method: "POST",
+	// 		body: JSON.stringify(postData),
+	// 		headers: {
+	// 			'Accept': 'application/json',
+	// 			'Content-Type': 'application/json',
+	// 		}
+	// 	})
+	// 		.then(resp => resp.json())
+	// 		.then((someData) => {
+	// 			console.log(someData, "00")
+	// 			// setPaymentData(someData)
+	// 			let orIDs = someData.orderId;
+	// 			let totalAmt = someData.total_amount
+	// 			let txtId = someData.txnToken
+
+	// 			var config = {
+	// 				"root": "",
+	// 				"flow": "DEFAULT",
+	// 				"data": {
+	// 					"orderId": orIDs, /* update order id */
+	// 					"token": txtId, /* update token value */
+	// 					"tokenType": "TXN_TOKEN",
+	// 					"amount": totalAmt /* update amount */
+	// 				},
+
+	// 				"handler": {
+	// 					"notifyMerchant": function (eventName, data) {
+	// 						console.log("notifyMerchant handler function called");
+	// 						console.log("eventName => ", eventName);
+	// 						console.log("data => ", data);
+	// 					}
+
+	// 				}
+	// 			};
+	// 			console.log(window.Paytm, "pay")
+	// 			if (window.Paytm && window.Paytm.CheckoutJS) {
+	// 				// window.Paytm.CheckoutJS.onLoad(function excecuteAfterCompleteLoad() {
+	// 				// initialze configuration using init method
+	// 				window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+	// 					// after successfully updating configuration, invoke JS Checkout
+	// 					// setLoader(false)
+	// 					window.Paytm.CheckoutJS.invoke();
+
+	// 				}).catch(function onError(error) {
+	// 					console.log("error => ", error);
+	// 				}).finally(() => {
+	// 					setLoader(false)
+	// 				});
+	// 				// });
+	// 			} else {
+	// 				setLoader(false)
+	// 			}
+	// 		})
+	// 		.catch((error) => {
+	// 			alert(error.message)
+	// 			setLoader(false)
+	// 		})
+	// 		.finally(() => {
+	// 			// setLoader(false)
+	// 		})
+	// }
+
+	const loadRazorpayScript = () => {
+		return new Promise((resolve) => {
+			const script = document.createElement('script');
+			script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+			script.onload = () => resolve(true);
+			script.onerror = () => resolve(false);
+			document.body.appendChild(script);
+		});
+	};
+
+	const handlePayment = async () => {
+		setLoader(true);
+		try {
+			const res = await loadRazorpayScript();
+			if (!res) {
+				Swal.fire('Error', 'Razorpay SDK failed to load. Are you online?', 'error');
+				setLoader(false);
+				return;
 			}
-		})
-			.then(resp => resp.json())
-			.then((someData) => {
-				console.log(someData, "00")
-				// setPaymentData(someData)
-				let orIDs = someData.orderId;
-				let totalAmt = someData.total_amount
-				let txtId = someData.txnToken
 
-				var config = {
-					"root": "",
-					"flow": "DEFAULT",
-					"data": {
-						"orderId": orIDs, /* update order id */
-						"token": txtId, /* update token value */
-						"tokenType": "TXN_TOKEN",
-						"amount": totalAmt /* update amount */
-					},
+			const postData = {
+				customer_id: userData.customer_id,
+				address_id: addressIDS,
+				cart_id: cartIds,
+				token: token,
+				isWeb: 1,
+				buy_now: 1,
+				quantity: 1
+			};
 
-					"handler": {
-						"notifyMerchant": function (eventName, data) {
-							console.log("notifyMerchant handler function called");
-							console.log("eventName => ", eventName);
-							console.log("data => ", data);
+			const result = await fetch(apiBase + 'books/buy', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'api_token': token,
+				},
+				body: JSON.stringify(postData),
+			});
+
+			if (!result.ok) {
+				console.error('Error:', result.status, result.statusText);
+				Swal.fire('Error', `API request failed: ${result.status} - ${result.statusText}`, 'error');
+				setLoader(false);
+				return;
+			}
+
+			const data = await result.json();
+			console.log('API Response:', data);  // Log response data for debugging
+
+			if (data.status === "success" && data.orderID) {
+				const options = {
+					key: 'rzp_live_ESHYjQ2LWl9DNS',
+					amount: data.amount_paise,
+					currency: data.currency,
+					name: 'FOREVER BOOKS PRIVATE LIMITED',
+					description: 'Test Transaction',
+					order_id: data.orderID,
+					handler: function (response) {
+						// if (response.razorpay_payment_id && response.razorpay_order_id && response.razorpay_signature) {
+						// 	router.push('/Your-order');
+						// } else {
+						// 	console.error('Missing necessary response fields:', response);
+						// }
+
+						if (response.razorpay_payment_id) {
+							const xData = {
+								"customer_id": userData.customer_id,
+								"address_id": addressIDS,
+								"token": token,
+								"shippingCharge": data.shippingCharge,
+								"razorpay_order_id": response.razorpay_order_id,
+								"razorpay_payment_id": response.razorpay_payment_id,
+								"razorpay_signature": response.razorpay_signature
+							};
+
+							// Verify payment details
+							fetch(apiBase + 'payment/verify', {
+								method: 'POST',
+								body: JSON.stringify(xData),
+								headers: {
+									'Accept': 'application/json',
+									'Content-Type': 'application/json',
+									'api_token': token,
+								},
+							})
+								.then(response => response.json())
+								.then((result) => {
+									if (result.status === "success") {
+										router.push('/Your-order');
+										console.log(result, "After payment success.....")
+									} else {
+										Swal.fire({
+											title: 'Warning!',
+											text: result.message,
+											icon: 'warning',
+											confirmButtonText: 'OK'
+										});
+									}
+								})
+								.catch((err) => alert(err))
+								.finally(() => setLoader(false));
+						} else {
+							console.error('Missing razorpay_payment_id in response');
 						}
-
-					}
+					},
+					prefill: {
+						name: 'YEF',
+						email: 'foreverbook4583@gmail.com',
+						contact: '91 9717 998857',
+					},
+					theme: {
+						color: '#3399cc',
+					},
 				};
-				console.log(window.Paytm, "pay")
-				if (window.Paytm && window.Paytm.CheckoutJS) {
-					// window.Paytm.CheckoutJS.onLoad(function excecuteAfterCompleteLoad() {
-					// initialze configuration using init method
-					window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-						// after successfully updating configuration, invoke JS Checkout
-						// setLoader(false)
-						window.Paytm.CheckoutJS.invoke();
 
-					}).catch(function onError(error) {
-						console.log("error => ", error);
-					}).finally(() => {
-						setLoader(false)
-					});
-					// });
-				} else {
-					setLoader(false)
-				}
-			})
-			.catch((error) => {
-				alert(error.message)
-				setLoader(false)
-			})
-			.finally(() => {
-				// setLoader(false)
-			})
-	}
+				const paymentObject = new window.Razorpay(options);
+				paymentObject.open();
+			} else {
+				Swal.fire('Warning', data.message ?? 'Failed to initiate payment. Please try again later.', 'warning');
+			}
+		} catch (error) {
+			console.error('Error during payment process:', error);
+			Swal.fire('Error', 'An error occurred during the payment process. Please try again.', 'error');
+		} finally {
+			setLoader(false);
+		}
+	};
+
 
 	if (items.data == undefined) {
 		return null
@@ -218,14 +349,14 @@ export default function CartListData() {
 											<div className='textBold'>Cart Sub Total :</div>
 											<div className='textNormal'>{MRP}</div>
 										</div>
-										
+
 										<div className='rowLine'>
 											<div className='textBold'>Shipping Charges ( + ) </div>
 											<div className='textNormal'>{gettShip}</div>
 										</div>
 										<div className='rowLine'>
 											<div className='textBold'>Payable Amount :</div>
-											<div className='textNormal'>{Number(MRP)+Number(gettShip)}</div>
+											<div className='textNormal'>{Number(MRP) + Number(gettShip)}</div>
 										</div>
 
 									</div>
@@ -339,10 +470,10 @@ export default function CartListData() {
 							<Offcanvas.Title className='titleText'>Select payment option</Offcanvas.Title>
 						</Offcanvas.Header>
 						<Offcanvas.Body>
-							<div className='payImgs' onClick={ptmFunct}>
-								<img src='/indexImg/ptm.jpg' />
+							<div className="boPay shadow-sm" onClick={handlePayment}>
+								<div>Pay Through Razorpay </div>
+								<div className='payImgs_i'><img src='/indexImg/payLogo.jpg' /></div>
 							</div>
-							
 						</Offcanvas.Body>
 					</Offcanvas>
 					{loader &&
